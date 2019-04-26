@@ -1,18 +1,39 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <form>
+      用戶名：
+      <input type="text" name="username" v-model="username">
+      <br>密码：
+      <input type="password" name="password" v-model="password">
+      <br>
+      <button @click.prevent="login">提交</button>
+    </form>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
-  name: 'home',
-  components: {
-    HelloWorld
+  name: "home",
+  data() {
+    return {
+      username: "",
+      password: ""
+    };
+  },
+  methods: {
+    login() {
+      axios
+        .post("/api/login", {
+          username: this.username,
+          password: this.password
+        })
+        .then(function(res) {
+          this.$router.push({ name: '/roles', params: { username: res.data.username } })
+        })
+        .catch(function(error) {
+          alert(error)
+        });
+    }
   }
-}
+};
 </script>
